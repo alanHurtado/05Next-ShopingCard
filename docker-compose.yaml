@@ -1,0 +1,9 @@
+services:
+  shopteslodb:
+    image: mongo:5.0.0
+    container_name: shop-databse
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo:/data/databse
+      
