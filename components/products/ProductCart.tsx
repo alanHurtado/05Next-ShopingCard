@@ -13,9 +13,10 @@ import { IProduct } from "../../interfaces/product";
 
 export const ProductCart: FC<IProduct> = ({ slug, images, title, price }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isImageLoaded, setisImageLoaded] = useState(false);
 
   const productImage = useMemo(() => {
-    return isHovered ? `products/${images[1]} ` : `products/${images[0]}`;
+    return isHovered ? `/products/${images[1]} ` : `/products/${images[0]}`;
   }, [isHovered, images]);
 
   return (
@@ -27,7 +28,7 @@ export const ProductCart: FC<IProduct> = ({ slug, images, title, price }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Card>
-        <NextLink href="/product/slug" passHref prefetch={false}>
+        <NextLink href={`/product/${slug}`} passHref prefetch={false}>
           <Link>
             <CardActionArea>
               <CardMedia
@@ -35,12 +36,16 @@ export const ProductCart: FC<IProduct> = ({ slug, images, title, price }) => {
                 image={productImage}
                 alt={title}
                 className="fadeIn"
+                onLoad={() => setisImageLoaded(true)}
               />
             </CardActionArea>
           </Link>
         </NextLink>
       </Card>
-      <Box sx={{ mt: 1 }} className="fadeIn">
+      <Box
+        sx={{ mt: 1, display: isImageLoaded ? "block" : "none" }}
+        className="fadeIn"
+      >
         <Typography fontWeight={700}>{title}</Typography>
         <Typography fontWeight={500}>${price}</Typography>
       </Box>

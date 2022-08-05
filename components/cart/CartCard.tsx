@@ -15,12 +15,12 @@ import { ItemCounter } from "../ui";
 interface Props extends IProduct {
   edit: Boolean;
 }
-export const CartCard: FC<Props> = ({ price, title, images, edit }) => {
+export const CartCard: FC<Props> = ({ price, title, images, edit, slug }) => { 
   return (
     <Grid container spacing={2} sx={{ mb: 1 }}>
       <Grid item xs={3}>
         {/* LLEvar a la página del producto */}
-        <NextLink href="/product/slug" passHref>
+        <NextLink href={`/product/${slug}`} passHref>
           <Link typography="h4" color="secondary">
             {" "}
             <CardActionArea>
