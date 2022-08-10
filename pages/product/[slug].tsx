@@ -1,24 +1,43 @@
-import {
-  GetServerSideProps,
-  GetStaticPaths,
-  GetStaticProps,
-  NextPage,
-} from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useRouter } from "next/router";
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 import { ShopLayout } from "../../components/layouts/ShopLayout";
 import { ProcutSlideshow, SizeSelector } from "../../components/products";
 import { ItemCounter } from "../../components/ui";
 import { getProductBySlug, getAllProdcutSlugs } from "../../database/dbProduct";
-import { IProduct } from "../../interfaces/product";
+import { IProduct, ICartProduct } from "../../interfaces";
+import { useState, useContext } from "react";
+import { ISize } from "../../interfaces/cart";
+import { CartContext } from "../../context";
 
 interface Props {
   product: IProduct;
 }
 const ProductPage: NextPage<Props> = ({ product }) => {
-  // const { query } = useRouter();
-  // const { products: product, isLoading } = useProducts(
-  //   `/product/${query.slug}`
-  // );
+  const router = useRouter();
+  const { addProductToCart } = useContext(CartContext);
+  const [tempCartProduct, settempCartProduct] = useState<ICartProduct>({
+    _id: product._id,
+    image: product.images[0],
+    price: product.price,
+    size: undefined,
+    slug: product.slug,
+    title: product.title,
+    gender: product.gender,
+    quantity: 1,
+  });
+  const onSelectedSize = (size: ISize) => {
+    settempCartProduct({ ...tempCartProduct, size });
+  };
+  const onUpdateCuantity = (quantity: number) => {
+    settempCartProduct({ ...tempCartProduct, quantity });
+  };
+
+  const onAddProduct = () => {
+    if (!tempCartProduct.size) return;
+    addProductToCart(tempCartProduct);
+    router.push("/cart");
+  };
 
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
@@ -38,21 +57,35 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             {/* Cantidad */}
             <Box sx={{ my: 2 }}>
               <Typography variant="subtitle2"> Cantidad </Typography>
-              <ItemCounter />
+              <ItemCounter
+                currentValue={tempCartProduct.quantity}
+                maxValue={product.inStock > 19 ? 19 : product.inStock}
+                updateQuantity={onUpdateCuantity}
+              />
               <SizeSelector
-                // selectedSize={product.sizes[0]}
+                selectedSize={tempCartProduct.size}
                 sizes={product.sizes}
+                onSelectedSize={onSelectedSize}
               />
             </Box>
             {/* Agregar al carrito */}
-            <Button color="secondary" className="'circular-btn">
-              Agregar al carrito
-            </Button>
-            {/* <Chip
-              label="No hay disponoibles"
-              color="error"
-              variant="outlined"
-            /> */}
+            {product.inStock === 0 ? (
+              <Chip
+                label="No hay disponoibles"
+                color="error"
+                variant="outlined"
+              />
+            ) : (
+              <Button
+                onClick={onAddProduct}
+                color="secondary"
+                className="'circular-btn"
+              >
+                {tempCartProduct.size
+                  ? "Agregar al carrito"
+                  : "Seleccione un talla"}
+              </Button>
+            )}
             <Box sx={{ mt: 3 }}>
               <Typography variant="subtitle2"> Descripción </Typography>
               <Typography variant="body2"> {product.description} </Typography>
@@ -63,30 +96,6 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     </ShopLayout>
   );
 };
-
-// You should use getServerSideProps when:
-// - Only if you need to pre-render a page whose data must be fetched at request time
-
-// export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-//   const { slug = "" } = params as { slug: string };
-
-//   const product = await getProductBySlug(slug);
-
-//   if (!product) {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return {
-//     props: { product },
-//   };
-// };
-
-// You should use getStaticPaths if you’re statically pre-rendering pages that use dynamic routes
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
   const productSlugs = await getAllProdcutSlugs(); // your fetch function here

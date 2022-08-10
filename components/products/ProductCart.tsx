@@ -3,6 +3,7 @@ import {
   Card,
   CardActionArea,
   CardMedia,
+  Chip,
   Grid,
   Link,
   Typography,
@@ -11,7 +12,13 @@ import NextLink from "next/link";
 import { FC, useMemo, useState } from "react";
 import { IProduct } from "../../interfaces/product";
 
-export const ProductCart: FC<IProduct> = ({ slug, images, title, price }) => {
+export const ProductCart: FC<IProduct> = ({
+  slug,
+  images,
+  title,
+  price,
+  inStock,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isImageLoaded, setisImageLoaded] = useState(false);
 
@@ -31,6 +38,18 @@ export const ProductCart: FC<IProduct> = ({ slug, images, title, price }) => {
         <NextLink href={`/product/${slug}`} passHref prefetch={false}>
           <Link>
             <CardActionArea>
+              {inStock === 0 && (
+                <Chip
+                  color="primary"
+                  label="No hay disponible"
+                  sx={{
+                    position: "absolute",
+                    zIndex: 99,
+                    top: "10px",
+                    left: "10px",
+                  }}
+                />
+              )}
               <CardMedia
                 component="img"
                 image={productImage}

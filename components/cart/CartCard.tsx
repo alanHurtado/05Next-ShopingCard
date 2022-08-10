@@ -8,24 +8,37 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import { FC } from "react";
-import { IProduct } from "../../interfaces";
+import { FC, useContext, useState } from "react";
+import { ICartProduct } from "../../interfaces";
 import { ItemCounter } from "../ui";
+import { CartContext } from "../../context";
 
-interface Props extends IProduct {
+interface Props extends ICartProduct {
   edit: Boolean;
 }
-export const CartCard: FC<Props> = ({ price, title, images, edit, slug }) => { 
+export const CartCard: FC<Props> = (product) => {
+  const { updateCartQuantity, removeCartProduct } = useContext(CartContext);
+
+  const onNewCartQuantity = (
+    productInCart: ICartProduct,
+    newQuantityValue: number
+  ) => {
+    const newProductInCart = {
+      ...productInCart,
+      quantity: newQuantityValue,
+    };
+
+    updateCartQuantity(newProductInCart);
+  };
   return (
     <Grid container spacing={2} sx={{ mb: 1 }}>
       <Grid item xs={3}>
         {/* LLEvar a la página del producto */}
-        <NextLink href={`/product/${slug}`} passHref>
+        <NextLink href={`/product/${product.slug}`} passHref>
           <Link typography="h4" color="secondary">
-            {" "}
             <CardActionArea>
               <CardMedia
-                image={`/products/${images[0]}`}
+                image={`/products/${product.image}`}
                 component="img"
                 sx={{ borderRadius: "5px" }}
               />
@@ -35,11 +48,21 @@ export const CartCard: FC<Props> = ({ price, title, images, edit, slug }) => {
       </Grid>
       <Grid item xs={7}>
         <Box display="flex" flexDirection="column">
-          <Typography variant="body1"> {title}</Typography>
+          <Typography variant="body1"> {product.title}</Typography>
           <Typography variant="body1">
-            Talla: <strong> M</strong>
+            Talla: <strong> {product.size}</strong>
           </Typography>
-          {edit ? <ItemCounter /> : <Typography variant="body1">3</Typography>}
+          {product.edit ? (
+            <ItemCounter
+              currentValue={product.quantity}
+              maxValue={20}
+              updateQuantity={(value) => onNewCartQuantity(product, value)}
+            />
+          ) : (
+            <Typography variant="body1">
+              {product.quantity} producto{product.quantity > 1 && "s"}
+            </Typography>
+          )}
         </Box>
       </Grid>
       <Grid
@@ -49,9 +72,13 @@ export const CartCard: FC<Props> = ({ price, title, images, edit, slug }) => {
         alignItems="center"
         flexDirection="column"
       >
-        <Typography variant="subtitle1">{`$${price}`}</Typography>
-        {edit && (
-          <Button variant="text" color="secondary">
+        <Typography variant="subtitle1">{`$${product.price}`}</Typography>
+        {product.edit && (
+          <Button
+            onClick={() => removeCartProduct(product)}
+            variant="text"
+            color="secondary"
+          >
             Remover
           </Button>
         )}

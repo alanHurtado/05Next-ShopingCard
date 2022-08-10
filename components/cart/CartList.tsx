@@ -1,21 +1,18 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { initialData } from "../../database/products";
 import { CartCard } from "./CartCard";
+import { CartContext } from "../../context/cart/CartContext";
 
 interface Props {
   edit?: boolean;
 }
-const productInCart = [
-  initialData.products[0],
-  initialData.products[3],
-  initialData.products[2],
-  initialData.products[7],
-];
+
 export const CartList: FC<Props> = ({ edit = false }) => {
+  const { cart } = useContext(CartContext);
   return (
     <>
-      {productInCart.map((product) => (
-        <CartCard key={product.slug} {...product} edit={edit} />
+      {cart.map((product) => (
+        <CartCard key={product.slug + product.size} {...product} edit={edit} />
       ))}
     </>
   );

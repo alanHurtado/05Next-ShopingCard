@@ -6,8 +6,6 @@ interface Props {
   images: string[];
 }
 export const ProcutSlideshow: FC<Props> = ({ images }) => {
-  console.log(`url(/products/${images[0]})`);
-
   return (
     <Slide>
       {images.map((image) => (
