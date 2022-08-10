@@ -19,9 +19,11 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { UiContext } from "../../context/ui/UiContext";
+import { CartContext } from "../../context/cart/CartContext";
 
 export const Navbar = () => {
   const { toogleSideMenu } = useContext(UiContext);
+  const { numberOfItems } = useContext(CartContext);
   const { asPath, push } = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -100,7 +102,10 @@ export const Navbar = () => {
             }
           />
         ) : (
-          <IconButton  sx={{ display: { xs: "none", sm: "flex" } }} onClick={() => setOpenSearch(true)}>
+          <IconButton
+            sx={{ display: { xs: "none", sm: "flex" } }}
+            onClick={() => setOpenSearch(true)}
+          >
             <SearchOffOutlined />
           </IconButton>
         )}
@@ -114,7 +119,10 @@ export const Navbar = () => {
         <NextLink href="/cart" passHref>
           <Link>
             <IconButton>
-              <Badge badgeContent={2} color="secondary">
+              <Badge
+                badgeContent={numberOfItems > 9 ? "+9" : numberOfItems}
+                color="secondary"
+              >
                 <ShoppingCartOutlined />
               </Badge>
             </IconButton>
