@@ -113,7 +113,7 @@ export const SideMenu = () => {
             <ListItemText primary={"Niños"} />
           </ListItem>
 
-          <ListItem button>
+          <ListItem button onClick={() => navigateTo("/auth/login")}>
             <ListItemIcon>
               <VpnKeyOutlined />
             </ListItemIcon>

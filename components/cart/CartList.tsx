@@ -1,5 +1,4 @@
 import { FC, useContext } from "react";
-import { initialData } from "../../database/products";
 import { CartCard } from "./CartCard";
 import { CartContext } from "../../context/cart/CartContext";
 
