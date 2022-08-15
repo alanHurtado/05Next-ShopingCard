@@ -14,7 +14,7 @@ import { ItemCounter } from "../ui";
 import { CartContext } from "../../context";
 
 interface Props extends ICartProduct {
-  edit: Boolean;
+  editable: Boolean;
 }
 export const CartCard: FC<Props> = (product) => {
   const { updateCartQuantity, removeCartProduct } = useContext(CartContext);
@@ -52,7 +52,7 @@ export const CartCard: FC<Props> = (product) => {
           <Typography variant="body1">
             Talla: <strong> {product.size}</strong>
           </Typography>
-          {product.edit ? (
+          {product.editable ? (
             <ItemCounter
               currentValue={product.quantity}
               maxValue={20}
@@ -73,7 +73,7 @@ export const CartCard: FC<Props> = (product) => {
         flexDirection="column"
       >
         <Typography variant="subtitle1">{`$${product.price}`}</Typography>
-        {product.edit && (
+        {product.editable && (
           <Button
             onClick={() => removeCartProduct(product)}
             variant="text"

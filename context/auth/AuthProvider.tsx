@@ -4,6 +4,7 @@ import { IUser } from "../../interfaces/user";
 import tesloApi from "../../api/tesloApi";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -19,6 +20,7 @@ const AUTH_INITIAL_STATE: AuthState = {
 
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReduccer, AUTH_INITIAL_STATE);
+  const router = useRouter();
   useEffect(() => {
     checkToken();
   }, []);
@@ -63,7 +65,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       if (axios.isAxiosError(error)) {
         return {
           hasError: true,
-          message: 'error axios' ,
+          message: "error axios",
         };
       }
 
@@ -74,12 +76,19 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     }
   };
 
+  const logout = () => {
+    Cookies.remove("token");
+    Cookies.remove("cart");
+    router.reload();
+  };
+
   return (
     <AuthContext.Provider
       value={{
         ...state,
         loginUser,
         registerUser,
+        logout,
       }}
     >
       {children}

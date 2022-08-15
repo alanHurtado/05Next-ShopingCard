@@ -3,15 +3,15 @@ import { CartCard } from "./CartCard";
 import { CartContext } from "../../context/cart/CartContext";
 
 interface Props {
-  edit?: boolean;
+  editable?: boolean;
 }
 
-export const CartList: FC<Props> = ({ edit = false }) => {
+export const CartList: FC<Props> = ({ editable = false }) => {
   const { cart } = useContext(CartContext);
   return (
     <>
       {cart.map((product) => (
-        <CartCard key={product.slug + product.size} {...product} edit={edit} />
+        <CartCard key={product.slug + product.size} {...product} editable={editable} />
       ))}
     </>
   );

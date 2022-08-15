@@ -22,7 +22,7 @@ import { UiContext } from "../../context/ui/UiContext";
 import { CartContext } from "../../context/cart/CartContext";
 
 export const Navbar = () => {
-  const { toogleSideMenu } = useContext(UiContext);
+  const { toggleSideMenu } = useContext(UiContext);
   const { numberOfItems } = useContext(CartContext);
   const { asPath, push } = useRouter();
 
@@ -112,7 +112,7 @@ export const Navbar = () => {
         {/* Pantallas Pequeñas */}
         <IconButton
           sx={{ display: { xs: "flex", sm: "none" } }}
-          onClick={toogleSideMenu}
+          onClick={toggleSideMenu}
         >
           <SearchOffOutlined />
         </IconButton>
@@ -128,7 +128,7 @@ export const Navbar = () => {
             </IconButton>
           </Link>
         </NextLink>
-        <Button onClick={toogleSideMenu}>Menú</Button>
+        <Button onClick={toggleSideMenu}>Menú</Button>
       </Toolbar>
     </AppBar>
   );
