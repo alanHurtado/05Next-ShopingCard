@@ -1,8 +1,10 @@
 import { createContext } from "react";
 import { IUser } from "../../interfaces";
-export interface ContextProps {
+
+interface ContextProps {
   isLoggedIn: boolean;
   user?: IUser;
+
   loginUser: (email: string, password: string) => Promise<boolean>;
   registerUser: (
     name: string,

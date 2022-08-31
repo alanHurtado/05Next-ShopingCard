@@ -1,18 +1,19 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
-import { jwt } from "./utils";
+import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
-  const token = req.cookies.get("token");
+  const sesion = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   if (req.nextUrl.pathname.startsWith("/checkout")) {
-    console.log("imprime esto", token);
-    // try {
-    //   await jwt.isValidToken(token!);
-    //   return NextResponse.next();
-    // } catch (error) {
-    //     return Response.redirect('/auth/login');
-    // //   const requestedPage = req.page;
-    // //   return NextResponse.redirect(`http://localhost:3000/auth/login?p=${requestedPage}`);
-    // }
+    const requestedPage = req.nextUrl.pathname;
+    console.log("dame algo bonidto", requestedPage);
+
+    const url = req.nextUrl.clone();
+    url.pathname = `/auth/login`;
+    url.search = `p=${requestedPage}`;
+    if (!sesion) {
+      return NextResponse.redirect(url);
+    }
   }
+  return NextResponse.next();
 }
