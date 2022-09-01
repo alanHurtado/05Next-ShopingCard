@@ -1,4 +1,5 @@
 import { FC, useReducer, useEffect, ReactNode } from "react";
+import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
 
 import Cookies from "js-cookie";
@@ -18,13 +19,14 @@ const AUTH_INITIAL_STATE: AuthState = {
   isLoggedIn: false,
   user: undefined,
 };
-
 interface Props {
   children: ReactNode;
 }
+
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
   const { data, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -80,7 +82,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       if (axios.isAxiosError(error)) {
         return {
           hasError: true,
-          message: "error de axios",
+          message: 'error.response?.data.message',
         };
       }
 

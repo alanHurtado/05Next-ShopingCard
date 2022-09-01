@@ -5,7 +5,7 @@ import "react-slideshow-image/dist/styles.css";
 interface Props {
   images: string[];
 }
-export const ProcutSlideshow: FC<Props> = ({ images }) => {
+export const ProductSlideshow: FC<Props> = ({ images }) => {
   return (
     <Slide>
       {images.map((image) => (

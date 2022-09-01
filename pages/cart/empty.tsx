@@ -1,15 +1,12 @@
 import NextLink from "next/link";
+
 import { RemoveShoppingCartOutlined } from "@mui/icons-material";
 import { Box, Link, Typography } from "@mui/material";
-
 import { ShopLayout } from "../../components/layouts";
 
 const EmptyPage = () => {
   return (
-    <ShopLayout
-      title={"Carrito vacio"}
-      pageDescription="No hay articulos en carritos de compras"
-    >
+    <ShopLayout title="Carrito vació" pageDescription="No hay artículos en el carrito de compras">
       <Box
         display="flex"
         justifyContent="center"
@@ -19,7 +16,7 @@ const EmptyPage = () => {
       >
         <RemoveShoppingCartOutlined sx={{ fontSize: 100 }} />
         <Box display="flex" flexDirection="column" alignItems="center">
-          <Typography>Su carrito esta vació</Typography>
+          <Typography>Su carrito está vació</Typography>
           <NextLink href="/" passHref>
             <Link typography="h4" color="secondary">
               Regresar
