@@ -3,10 +3,8 @@ export interface IUser {
   name: string;
   email: string;
   password?: string;
-  role: Role;
-  // TODO: agregar createAT y updateAt
+  role: string;
+
   createdAt?: string;
   updatedAt?: string;
 }
-
-export type Role = "admin" | "client";
