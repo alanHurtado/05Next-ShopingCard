@@ -1,26 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db, SHOP_CONSTANS } from "../../../database";
+import { db, SHOP_CONSTANTS } from "../../../database";
 import { Product } from "../../../models";
 import { IProduct } from "../../../interfaces/product";
 
 type Data = { message: string } | IProduct[];
-export default function handle(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+
+export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
     case "GET":
       return getProducts(req, res);
 
     default:
-      return res.status(400).json({ message: "Bad request" });
+      return res.status(400).json({
+        message: "Bad request",
+      });
   }
 }
 
 const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { gender = "all" } = req.query;
+
   let condition = {};
-  if (gender !== "all" && SHOP_CONSTANS.validGenders.includes(`${gender}`)) {
+
+  if (gender !== "all" && SHOP_CONSTANTS.validGenders.includes(`${gender}`)) {
     condition = { gender };
   }
 
@@ -30,5 +32,14 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     .lean();
 
   await db.disconnect();
-  res.status(200).json(products);
+
+  const updatedProducts = products.map((product) => {
+    product.images = product.images.map((image) => {
+      return image.includes("http") ? image : `${process.env.HOST_NAME}products/${image}`;
+    });
+
+    return product;
+  });
+
+  return res.status(200).json(updatedProducts);
 };
